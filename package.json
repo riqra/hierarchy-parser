@@ -2,5 +2,11 @@
   "name": "hierarchy-parser",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "test": "ava"
+  },
+  "dependencies": {
+    "ava": "^0.24.0"
+  }
 }
