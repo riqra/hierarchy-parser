@@ -101,7 +101,42 @@ test('it gets children from an specific parent id', t => {
     }
   ]
 
-  const hierarchy = hierarchyParser(data, 'parentId', 3)
+  const hierarchy = hierarchyParser(data, { initialParentId: 3 })
+
+  t.deepEqual(hierarchy, expected)
+})
+
+test('it can handle different parentKey and identifier', t => {
+  const data = [
+    {
+      sku: 'KD910',
+      name: 'Decor',
+      ancestor: null
+    },
+    {
+      sku: 'M921LJ',
+      name: 'Frames',
+      ancestor: 'KD910'
+    }
+  ]
+
+  const expected = [
+    {
+      sku: 'KD910',
+      name: 'Decor',
+      children: [
+        {
+          sku: 'M921LJ',
+          name: 'Frames'
+        }
+      ]
+    }
+  ]
+
+  const hierarchy = hierarchyParser(data, {
+    identifier: 'sku',
+    parentKey: 'ancestor'
+  })
 
   t.deepEqual(hierarchy, expected)
 })

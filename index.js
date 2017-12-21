@@ -1,14 +1,24 @@
-module.exports = (data, parentKey = 'parentId', initialParent = null) => {
+module.exports = (data, options = {}) => {
+  if (!options.parentKey) {
+    options.parentKey = 'parentId'
+  }
+
+  if (!options.identifier) {
+    options.identifier = 'id'
+  }
+
+  const { parentKey, identifier, initialParentId } = options
+
   if (!parentKey) {
     throw new Error('you need specify a parent key')
   }
 
   let parents = []
 
-  if (!initialParent) {
+  if (!initialParentId) {
     parents = data.filter(item => item[parentKey] === null)
   } else {
-    parents = data.filter(item => item.id === initialParent)
+    parents = data.filter(item => item[identifier] === initialParentId)
   }
 
   const recursive = parents => {
@@ -17,10 +27,10 @@ module.exports = (data, parentKey = 'parentId', initialParent = null) => {
 
   const getChildrens = parent => {
     const children = data.filter(item => {
-      return item[parentKey] === parent.id
+      return item[parentKey] === parent[identifier]
     })
 
-    delete parent.parentId
+    delete parent[parentKey]
 
     if (children.length > 0) {
       parent.children = children
