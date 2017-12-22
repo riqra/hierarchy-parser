@@ -3,6 +3,11 @@
   "version": "1.2.0",
   "main": "index.js",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/riqra/hierarchy-parser"
+  },
+  "keywords": ["hierarchy", "normalizr", "nested-structure", "tree"],
   "scripts": {
     "test": "ava"
   },
