@@ -1,8 +1,20 @@
 [![Build Status](https://travis-ci.org/riqra/hierarchy-parser.svg?branch=master)](https://travis-ci.org/riqra/hierarchy-parser)
 
+> Dependencies free
+
 ## Hierarchy Parser
 
 ![](https://res.cloudinary.com/riqra/image/upload/v1513825837/github/hierarchy-parser.svg)
+
+## What's it for?
+
+Relational databases aren't very good at dealing with nested hierarchies.
+
+Examples of hierarchies are:
+
+* Nested folders where each folder has many subfolders, those subfolders themselves have subfolders, and so on
+* Categories and sub-categories e.g. for a newspaper with sections for different sports, Sports category splits into Track Sports and Water Sports, Water Sports into Swimming and Diving, Diving into High Board, Middle Board and Low Board etc
+* Tree structures
 
 ## How to use
 
