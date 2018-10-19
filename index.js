@@ -9,10 +9,6 @@ module.exports = (data, options = {}) => {
 
   const { parentKey, identifier, initialParentId } = options
 
-  if (!parentKey) {
-    throw new Error('you need specify a parent key')
-  }
-
   let parents = []
 
   if (!initialParentId) {
@@ -29,8 +25,6 @@ module.exports = (data, options = {}) => {
     const children = data.filter(item => {
       return item[parentKey] === parent[identifier]
     })
-
-    delete parent[parentKey]
 
     if (children.length > 0) {
       parent.children = children

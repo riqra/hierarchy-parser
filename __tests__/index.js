@@ -40,30 +40,36 @@ test('check if data is correctly being parsed', t => {
     {
       id: 1,
       name: 'Home',
+      parentId: null,
       children: [
         {
           id: 3,
           name: 'Decor',
+          parentId: 1,
           children: [
             {
               id: 6,
-              name: 'Frames'
+              name: 'Frames',
+              parentId: 3
             }
           ]
         },
         {
           id: 4,
-          name: 'Bath'
+          name: 'Bath',
+          parentId: 1
         }
       ]
     },
     {
       id: 2,
       name: 'Tech',
+      parentId: null,
       children: [
         {
           id: 5,
-          name: 'Games'
+          name: 'Games',
+          parentId: 2
         }
       ]
     }
@@ -92,10 +98,12 @@ test('it gets children from an specific parent id', t => {
     {
       id: 3,
       name: 'Decor',
+      parentId: 1,
       children: [
         {
           id: 6,
-          name: 'Frames'
+          name: 'Frames',
+          parentId: 3
         }
       ]
     }
@@ -124,10 +132,12 @@ test('it can handle different parentKey and identifier', t => {
     {
       sku: 'KD910',
       name: 'Decor',
+      ancestor: null,
       children: [
         {
           sku: 'M921LJ',
-          name: 'Frames'
+          name: 'Frames',
+          ancestor: 'KD910'
         }
       ]
     }
@@ -139,4 +149,40 @@ test('it can handle different parentKey and identifier', t => {
   })
 
   t.deepEqual(hierarchy, expected)
+})
+
+test('check if hierarchyParser is ephemeral', t => {
+  const data = [
+    {
+      id: 1,
+      name: 'Werner Heisenberg',
+      parentId: null
+    },
+    {
+      id: 2,
+      name: 'Sommerfeld',
+      parentId: 1
+    }
+  ]
+
+  const expected = [
+    {
+      id: 1,
+      name: 'Werner Heisenberg',
+      parentId: null,
+      children: [
+        {
+          id: 2,
+          name: 'Sommerfeld',
+          parentId: 1
+        }
+      ]
+    }
+  ]
+
+  const hierarchyOne = hierarchyParser(data)
+  const hierarchyTwo = hierarchyParser(data)
+
+  t.deepEqual(hierarchyOne, expected)
+  t.deepEqual(hierarchyTwo, expected)
 })
