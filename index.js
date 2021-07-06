@@ -12,27 +12,33 @@ module.exports = (data, options = {}) => {
   let parents = []
 
   if (!initialParentId) {
-    parents = data.filter(item => item[parentKey] === null)
+    parents = data.filter((item) => item[parentKey] === null)
   } else {
-    parents = data.filter(item => item[identifier] === initialParentId)
+    parents = data.filter((item) => item[identifier] === initialParentId)
   }
 
-  const recursive = parents => {
-    parents.forEach(getChildrens)
+  const getChildrens = (parent) => {
+    const children = data.filter(
+      (item) => item[parentKey] === parent[identifier]
+    )
+
+    return children.length > 0 ? children : null
   }
 
-  const getChildrens = parent => {
-    const children = data.filter(item => {
-      return item[parentKey] === parent[identifier]
+  const recursive = (parents) => {
+    return parents.map((parent) => {
+      const children = getChildrens(parent)
+
+      if (children) {
+        return {
+          ...parent,
+          children: recursive(children),
+        }
+      }
+
+      return parent
     })
-
-    if (children.length > 0) {
-      parent.children = children
-      recursive(children)
-    }
   }
 
-  recursive(parents)
-
-  return parents
+  return recursive(parents)
 }
