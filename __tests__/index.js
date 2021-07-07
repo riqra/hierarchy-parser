@@ -2,38 +2,38 @@ const { test } = require('ava')
 
 const hierarchyParser = require('../index')
 
-test('check if data is correctly being parsed', t => {
+test('check if data is correctly being parsed', (t) => {
   const data = [
     {
       id: 1,
       name: 'Home',
-      parentId: null
+      parentId: null,
     },
     {
       id: 2,
       name: 'Tech',
-      parentId: null
+      parentId: null,
     },
     {
       id: 3,
       name: 'Decor',
-      parentId: 1
+      parentId: 1,
     },
     {
       id: 4,
       name: 'Bath',
-      parentId: 1
+      parentId: 1,
     },
     {
       id: 5,
       name: 'Games',
-      parentId: 2
+      parentId: 2,
     },
     {
       id: 6,
       name: 'Frames',
-      parentId: 3
-    }
+      parentId: 3,
+    },
   ]
 
   const expected = [
@@ -50,16 +50,16 @@ test('check if data is correctly being parsed', t => {
             {
               id: 6,
               name: 'Frames',
-              parentId: 3
-            }
-          ]
+              parentId: 3,
+            },
+          ],
         },
         {
           id: 4,
           name: 'Bath',
-          parentId: 1
-        }
-      ]
+          parentId: 1,
+        },
+      ],
     },
     {
       id: 2,
@@ -69,10 +69,10 @@ test('check if data is correctly being parsed', t => {
         {
           id: 5,
           name: 'Games',
-          parentId: 2
-        }
-      ]
-    }
+          parentId: 2,
+        },
+      ],
+    },
   ]
 
   const hierarchy = hierarchyParser(data)
@@ -80,18 +80,18 @@ test('check if data is correctly being parsed', t => {
   t.deepEqual(hierarchy, expected)
 })
 
-test('it gets children from an specific parent id', t => {
+test('it gets children from an specific parent id', (t) => {
   const data = [
     {
       id: 3,
       name: 'Decor',
-      parentId: 1
+      parentId: 1,
     },
     {
       id: 6,
       name: 'Frames',
-      parentId: 3
-    }
+      parentId: 3,
+    },
   ]
 
   const expected = [
@@ -103,10 +103,10 @@ test('it gets children from an specific parent id', t => {
         {
           id: 6,
           name: 'Frames',
-          parentId: 3
-        }
-      ]
-    }
+          parentId: 3,
+        },
+      ],
+    },
   ]
 
   const hierarchy = hierarchyParser(data, { initialParentId: 3 })
@@ -114,18 +114,18 @@ test('it gets children from an specific parent id', t => {
   t.deepEqual(hierarchy, expected)
 })
 
-test('it can handle different parentKey and identifier', t => {
+test('it can handle different parentKey and identifier', (t) => {
   const data = [
     {
       sku: 'KD910',
       name: 'Decor',
-      ancestor: null
+      ancestor: null,
     },
     {
       sku: 'M921LJ',
       name: 'Frames',
-      ancestor: 'KD910'
-    }
+      ancestor: 'KD910',
+    },
   ]
 
   const expected = [
@@ -137,32 +137,32 @@ test('it can handle different parentKey and identifier', t => {
         {
           sku: 'M921LJ',
           name: 'Frames',
-          ancestor: 'KD910'
-        }
-      ]
-    }
+          ancestor: 'KD910',
+        },
+      ],
+    },
   ]
 
   const hierarchy = hierarchyParser(data, {
     identifier: 'sku',
-    parentKey: 'ancestor'
+    parentKey: 'ancestor',
   })
 
   t.deepEqual(hierarchy, expected)
 })
 
-test('check if hierarchyParser is ephemeral', t => {
+test('check if hierarchyParser is ephemeral', (t) => {
   const data = [
     {
       id: 1,
       name: 'Werner Heisenberg',
-      parentId: null
+      parentId: null,
     },
     {
       id: 2,
       name: 'Sommerfeld',
-      parentId: 1
-    }
+      parentId: 1,
+    },
   ]
 
   const expected = [
@@ -174,10 +174,10 @@ test('check if hierarchyParser is ephemeral', t => {
         {
           id: 2,
           name: 'Sommerfeld',
-          parentId: 1
-        }
-      ]
-    }
+          parentId: 1,
+        },
+      ],
+    },
   ]
 
   const hierarchyOne = hierarchyParser(data)
@@ -185,4 +185,64 @@ test('check if hierarchyParser is ephemeral', t => {
 
   t.deepEqual(hierarchyOne, expected)
   t.deepEqual(hierarchyTwo, expected)
+})
+
+test('check if hierarchyParser does not mutate the input data', (t) => {
+  const f = Object.freeze.bind(null)
+
+  const data = f([
+    f({
+      id: 1,
+      name: 'La Libertad',
+      parentId: null,
+    }),
+    f({
+      id: 2,
+      name: 'Trujillo',
+      parentId: 1,
+    }),
+    f({
+      id: 3,
+      name: 'Florencia de Mora',
+      parentId: 2,
+    }),
+    f({
+      id: 4,
+      name: 'Alfonso Ugarte',
+      parentId: 3,
+    }),
+  ])
+
+  const expected = [
+    {
+      id: 1,
+      name: 'La Libertad',
+      parentId: null,
+      children: [
+        {
+          id: 2,
+          name: 'Trujillo',
+          parentId: 1,
+          children: [
+            {
+              id: 3,
+              name: 'Florencia de Mora',
+              parentId: 2,
+              children: [
+                {
+                  id: 4,
+                  name: 'Alfonso Ugarte',
+                  parentId: 3,
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    },
+  ]
+
+  const hierarchy = hierarchyParser(data)
+
+  t.deepEqual(hierarchy, expected)
 })
