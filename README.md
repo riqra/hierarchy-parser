@@ -10,9 +10,6 @@
   <a href="https://npmjs.org/package/@riqra/hierarchy-parser">
     <img alt="NPM version" src="https://img.shields.io/npm/v/@riqra/hierarchy-parser.svg?style=for-the-badge">
   </a>
-  <a href="https://github.com/riqra/hierarchy-parser">
-    <img alt="LICENSE" src="https://img.shields.io/github/license/riqra/hierarchy-parser?style=for-the-badge">
-  </a>
   <a href="https://github.com/riqra/hierarchy-parser/actions/workflows/ci.yml">
     <img alt="CI" src="https://img.shields.io/github/workflow/status/riqra/hierarchy-parser/CI?label=CI&style=for-the-badge">
   </a>
