@@ -1,22 +1,77 @@
 {
   "name": "@riqra/hierarchy-parser",
-  "version": "1.2.1",
-  "main": "index.js",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/riqra/hierarchy-parser"
-  },
+  "version": "0.0.0-development",
+  "private": false,
   "keywords": [
     "hierarchy",
     "normalizr",
     "nested-structure",
     "tree"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/riqra/hierarchy-parser"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "Riqra",
+    "email": "support@riqra.com",
+    "url": "https://riqra.com"
+  },
+  "main": "dist/index.js",
+  "module": "dist/hierarchy-parser.esm.js",
+  "typings": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
   "scripts": {
-    "test": "ava"
+    "start": "tsdx watch",
+    "build": "tsdx build",
+    "test": "tsdx test",
+    "lint": "tsdx lint",
+    "prepare": "tsdx build",
+    "size": "size-limit",
+    "analyze": "size-limit --why",
+    "prettier": "prettier --ignore-path .gitignore \"**/*.{ts,tsx,json}\"",
+    "format": "npm run prettier -- --write",
+    "check-format": "npm run prettier -- --list-different",
+    "semantic-release": "semantic-release"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "tsdx lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 100,
+    "semi": false,
+    "singleQuote": true,
+    "trailingComma": "es5"
   },
   "devDependencies": {
-    "ava": "^0.24.0"
-  }
+    "@size-limit/preset-small-lib": "^5.0.1",
+    "husky": "^7.0.1",
+    "semantic-release": "^17.4.4",
+    "size-limit": "^5.0.1",
+    "tsdx": "^0.14.1",
+    "tslib": "^2.3.0",
+    "typescript": "^4.3.5"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "size-limit": [
+    {
+      "path": "dist/hierarchy-parser.cjs.production.min.js",
+      "limit": "300 B"
+    },
+    {
+      "path": "dist/hierarchy-parser.esm.js",
+      "limit": "350 B"
+    }
+  ]
 }

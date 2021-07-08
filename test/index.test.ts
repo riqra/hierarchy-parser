@@ -1,8 +1,6 @@
-const { test } = require('ava')
+import hierarchyParser from '../src'
 
-const hierarchyParser = require('../index')
-
-test('check if data is correctly being parsed', (t) => {
+test('check if data is correctly being parsed', () => {
   const data = [
     {
       id: 1,
@@ -77,10 +75,10 @@ test('check if data is correctly being parsed', (t) => {
 
   const hierarchy = hierarchyParser(data)
 
-  t.deepEqual(hierarchy, expected)
+  expect(hierarchy).toMatchObject(expected)
 })
 
-test('it gets children from an specific parent id', (t) => {
+test('it gets children from an specific parent id', () => {
   const data = [
     {
       id: 3,
@@ -111,10 +109,10 @@ test('it gets children from an specific parent id', (t) => {
 
   const hierarchy = hierarchyParser(data, { initialParentId: 3 })
 
-  t.deepEqual(hierarchy, expected)
+  expect(hierarchy).toMatchObject(expected)
 })
 
-test('it can handle different parentKey and identifier', (t) => {
+test('it can handle different parentKey and identifier', () => {
   const data = [
     {
       sku: 'KD910',
@@ -148,10 +146,10 @@ test('it can handle different parentKey and identifier', (t) => {
     parentKey: 'ancestor',
   })
 
-  t.deepEqual(hierarchy, expected)
+  expect(hierarchy).toMatchObject(expected)
 })
 
-test('check if hierarchyParser is ephemeral', (t) => {
+test('check if hierarchyParser is ephemeral', () => {
   const data = [
     {
       id: 1,
@@ -183,11 +181,11 @@ test('check if hierarchyParser is ephemeral', (t) => {
   const hierarchyOne = hierarchyParser(data)
   const hierarchyTwo = hierarchyParser(data)
 
-  t.deepEqual(hierarchyOne, expected)
-  t.deepEqual(hierarchyTwo, expected)
+  expect(hierarchyOne).toMatchObject(expected)
+  expect(hierarchyTwo).toMatchObject(expected)
 })
 
-test('check if hierarchyParser does not mutate the input data', (t) => {
+test('check if hierarchyParser does not mutate the input data', () => {
   const f = Object.freeze.bind(null)
 
   const data = f([
@@ -244,5 +242,5 @@ test('check if hierarchyParser does not mutate the input data', (t) => {
 
   const hierarchy = hierarchyParser(data)
 
-  t.deepEqual(hierarchy, expected)
+  expect(hierarchy).toMatchObject(expected)
 })
