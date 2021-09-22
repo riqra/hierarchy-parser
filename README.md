@@ -112,4 +112,4 @@ this data will become
 ]
 ```
 
-see [tests](https://github.com/riqra/hierarchy-parser/tree/master/__tests__) for more examples
+see [tests](https://github.com/riqra/hierarchy-parser/tree/master/test) for more examples
