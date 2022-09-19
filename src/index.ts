@@ -21,30 +21,74 @@ export default function hierarchyParser<InputItem extends { [k: string]: unknown
     ...options,
   } as Required<HierarchyParserOptions>
 
-  let initialParents: InputItem[]
+  const pendingChildren: { [key: string]: HierarchyItem<InputItem>[] } = {}
 
-  if (!initialParentId) {
-    initialParents = dataSource.filter(item => item[parentKey] === null)
-  } else {
-    initialParents = dataSource.filter(item => item[identifier] === initialParentId)
-  }
+  const itemsIndex: { [key: string]: HierarchyItem<InputItem> } = {}
 
-  function getChildren(parent: InputItem) {
-    return dataSource.filter(item => item[parentKey] === parent[identifier])
-  }
+  const result = []
 
-  function toHierarchyItem(parent: InputItem): HierarchyItem<InputItem> {
-    const children = getChildren(parent)
+  for (let i = 0; i < dataSource.length; i++) {
+    // copy item
+    const currFolder: HierarchyItem<InputItem> = { ...dataSource[i] }
 
-    if (children.length === 0) {
-      return parent
+    const currId = currFolder[identifier]
+
+    // verify ID type
+    if (typeof currId !== 'string' && typeof currId !== 'number') {
+      throw new Error('item identifier must be string or number')
     }
 
-    return {
-      ...parent,
-      children: children.map(toHierarchyItem),
+    const currParentId = currFolder[parentKey]
+
+    // if there are items that have not been previously assigned, it assigns them
+    if (pendingChildren[currId]) {
+      currFolder.children = pendingChildren[currId]
+
+      delete pendingChildren[currId]
+    }
+
+    // push to root only items that have no parent or those assigned to initialParentId
+    if (
+      (initialParentId && currId === initialParentId) ||
+      (!initialParentId && currParentId === null)
+    ) {
+      result.push(currFolder)
+
+      itemsIndex[currId] = currFolder
+
+      continue
+    } else if (!currParentId) {
+      // if there is an id assigned to initialParentId and it finds one that is null, then ignores it.
+      continue
+    }
+
+    // index folder
+    itemsIndex[currId] = currFolder
+
+
+    // verify parentId type
+    if (typeof currParentId !== 'string' && typeof currParentId !== 'number') {
+      throw new Error('item identifier must be string or number')
+    }
+
+    // check if the indexed parent exists, if so, we add the folder as a child
+    if (itemsIndex[currParentId]) {
+      const parentFolder = itemsIndex[currParentId]
+
+      if (!parentFolder.children) {
+        parentFolder.children = []
+      }
+
+      parentFolder.children.push(currFolder)
+    } else {
+      if (!pendingChildren[currParentId]) {
+        pendingChildren[currParentId] = []
+      }
+
+      // if the indexed parent not exist, push as pending
+      pendingChildren[currParentId].push(currFolder)
     }
   }
 
-  return initialParents.map(toHierarchyItem)
+  return result
 }
